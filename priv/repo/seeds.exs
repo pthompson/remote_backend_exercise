@@ -2,10 +2,9 @@
 #
 #     mix run priv/repo/seeds.exs
 #
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     RemoteBackendExercise.Repo.insert!(%RemoteBackendExercise.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+
+# Create 1,000,000 seed users, each with initial points value of 0
+
+alias RemoteBackendExercise.Users
+
+for _ <- 1..1_000_000, do: Users.create_user(%{points: 0})
