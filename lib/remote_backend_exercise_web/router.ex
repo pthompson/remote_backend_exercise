@@ -5,7 +5,9 @@ defmodule RemoteBackendExerciseWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", RemoteBackendExerciseWeb do
+  scope "/", RemoteBackendExerciseWeb do
     pipe_through :api
+
+    get "/", UserController, :index
   end
 end

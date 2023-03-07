@@ -1,19 +1,17 @@
 defmodule RemoteBackendExerciseWeb.UserView do
   use RemoteBackendExerciseWeb, :view
-  alias RemoteBackendExerciseWeb.UserView
 
-  def render("index.json", %{users: users}) do
-    %{data: render_many(users, UserView, "user.json")}
+  def render("index.json", %{users: _users, timestamp: _timestamp} = users_points) do
+    render_users_points(users_points)
   end
 
-  def render("show.json", %{user: user}) do
-    %{data: render_one(user, UserView, "user.json")}
-  end
+  defp render_users_points(%{users: users, timestamp: timestamp}) do
+    formatted_timestamp =
+      if timestamp == nil, do: nil, else: Calendar.strftime(timestamp, "%y-%m-%d %I:%M:%S")
 
-  def render("user.json", %{user: user}) do
     %{
-      id: user.id,
-      points: user.points
+      users: users,
+      timestamp: formatted_timestamp
     }
   end
 end
