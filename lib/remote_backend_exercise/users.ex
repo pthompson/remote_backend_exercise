@@ -5,7 +5,6 @@ defmodule RemoteBackendExercise.Users do
 
   import Ecto.Query, warn: false
   alias RemoteBackendExercise.Repo
-
   alias RemoteBackendExercise.Users.User
 
   @doc """
@@ -100,5 +99,28 @@ defmodule RemoteBackendExercise.Users do
   """
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
+  end
+
+  @doc """
+  Updates all users' points in the database with random number from 0 to 100
+  """
+  def randomize_user_points do
+    update(User, set: [points: fragment("floor(random()*100)")])
+    |> Repo.update_all([])
+  end
+
+  @doc """
+  Query database for all users with more points than min_number but restrict result to a limited number of users.
+  """
+  def get_users_with_more_points_than_min(min_number, limit \\ 2) do
+    q =
+      from u in User,
+        as: :user,
+        where: u.points > ^min_number,
+        select: %{id: u.id, points: u.points},
+        order_by: [asc: u.points],
+        limit: ^limit
+
+    Repo.all(q)
   end
 end

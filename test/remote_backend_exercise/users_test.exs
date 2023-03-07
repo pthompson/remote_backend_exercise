@@ -13,8 +13,9 @@ defmodule RemoteBackendExercise.UsersTest do
     @invalid_attrs %{points: nil}
 
     test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Users.list_users() == [user]
+      users = Users.list_users()
+      all_user_points = Enum.map(users, & &1.points)
+      assert all_user_points == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     end
 
     test "get_user!/1 returns the user with given id" do
@@ -74,6 +75,64 @@ defmodule RemoteBackendExercise.UsersTest do
     test "change_user/1 returns a user changeset" do
       user = user_fixture()
       assert %Ecto.Changeset{} = Users.change_user(user)
+    end
+
+    test "randomize_user_points/0 changes user points in database" do
+      # Can only check that some or all values have changed. There is
+      # a slight chance that randomization will result in the exact same
+      # values, in which case the test would randomly fail.
+      initial_user_points =
+        Users.list_users()
+        |> Enum.map(& &1.points)
+
+      assert initial_user_points == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+      Users.randomize_user_points()
+
+      randomized_user_points =
+        Users.list_users()
+        |> Enum.map(& &1.points)
+
+      assert initial_user_points != randomized_user_points
+    end
+
+    test "get_users_with_more_points_than_min/2 returns data in expected shape" do
+      [user_id_and_points_map] = Users.get_users_with_more_points_than_min(3, 1)
+
+      assert Map.has_key?(user_id_and_points_map, :id)
+      assert Map.has_key?(user_id_and_points_map, :points)
+    end
+
+    test "get_users_with_more_points_than_min/2 returns users with lowest points when min_number is negative" do
+      points =
+        Users.get_users_with_more_points_than_min(-1)
+        |> Enum.map(& &1.points)
+
+      assert points == [0, 1]
+    end
+
+    test "get_users_with_more_points_than_min/2 returns points for [limit] users when min_number in middle of points range" do
+      points =
+        Users.get_users_with_more_points_than_min(5)
+        |> Enum.map(& &1.points)
+
+      assert points == [6, 7]
+    end
+
+    test "get_users_with_more_points_than_min/2 returns points for a single user when min_number is one less than single largest point value" do
+      points =
+        Users.get_users_with_more_points_than_min(9)
+        |> Enum.map(& &1.points)
+
+      assert points == [10]
+    end
+
+    test "get_users_with_more_points_than_min/2 returns empty list when min_number is greater than or equal to largest point value" do
+      points =
+        Users.get_users_with_more_points_than_min(10)
+        |> Enum.map(& &1.points)
+
+      assert points == []
     end
   end
 end
