@@ -16,5 +16,5 @@ if Mix.env() == :dev do
 end
 
 if Mix.env() == :test do
-  for n <- 0..10, do: Users.create_user(%{points: n})
+  for n <- 0..10, do: Users.create_user(%{points: n * 10})
 end

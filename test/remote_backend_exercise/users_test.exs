@@ -15,7 +15,7 @@ defmodule RemoteBackendExercise.UsersTest do
     test "list_users/0 returns all users" do
       users = Users.list_users()
       all_user_points = Enum.map(users, & &1.points)
-      assert all_user_points == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      assert all_user_points == [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     end
 
     test "get_user!/1 returns the user with given id" do
@@ -85,7 +85,7 @@ defmodule RemoteBackendExercise.UsersTest do
         Users.list_users()
         |> Enum.map(& &1.points)
 
-      assert initial_user_points == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      assert initial_user_points == [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
       Users.randomize_user_points()
 
@@ -108,28 +108,28 @@ defmodule RemoteBackendExercise.UsersTest do
         Users.get_users_with_more_points_than_min(-1)
         |> Enum.map(& &1.points)
 
-      assert points == [0, 1]
+      assert points == [0, 10]
     end
 
     test "get_users_with_more_points_than_min/2 returns points for [limit] users when min_number in middle of points range" do
       points =
-        Users.get_users_with_more_points_than_min(5)
+        Users.get_users_with_more_points_than_min(50)
         |> Enum.map(& &1.points)
 
-      assert points == [6, 7]
+      assert points == [60, 70]
     end
 
     test "get_users_with_more_points_than_min/2 returns points for a single user when min_number is one less than single largest point value" do
       points =
-        Users.get_users_with_more_points_than_min(9)
+        Users.get_users_with_more_points_than_min(90)
         |> Enum.map(& &1.points)
 
-      assert points == [10]
+      assert points == [100]
     end
 
     test "get_users_with_more_points_than_min/2 returns empty list when min_number is greater than or equal to largest point value" do
       points =
-        Users.get_users_with_more_points_than_min(10)
+        Users.get_users_with_more_points_than_min(100)
         |> Enum.map(& &1.points)
 
       assert points == []

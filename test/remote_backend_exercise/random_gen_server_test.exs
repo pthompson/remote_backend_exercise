@@ -35,7 +35,7 @@ defmodule RemoteBackendExercise.RandomGenServerTest do
 
     test "handle_call/3 :get_users returns expected response and updated state" do
       timestamp = DateTime.utc_now()
-      min_number = 5
+      min_number = 50
 
       {:reply, response, state} =
         RandomGenServer.handle_call({:get_users}, self(), %{
@@ -44,7 +44,7 @@ defmodule RemoteBackendExercise.RandomGenServerTest do
         })
 
       points = Enum.map(response.users, & &1.points)
-      assert points == [6, 7]
+      assert points == [60, 70]
 
       assert response.timestamp == timestamp
 
@@ -58,7 +58,7 @@ defmodule RemoteBackendExercise.RandomGenServerTest do
         Users.list_users()
         |> Enum.map(& &1.points)
 
-      assert initial_user_points == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+      assert initial_user_points == [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
       timestamp = DateTime.utc_now()
       min_number = 5
